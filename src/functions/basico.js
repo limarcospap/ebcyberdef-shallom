@@ -72,6 +72,7 @@ const inserirIpRelatorio = (obj) => {
     }
 }
 
+
 const saida = {
     relatorio: {
         ataque: "",

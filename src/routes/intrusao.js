@@ -9,12 +9,12 @@ const {enviarEmailPadrao} = require('../functions/mail')
 const f = require('../functions/basico')
 const path = require('path')
 const caminho = path.join(__dirname, '..', '..', 'database')
-
+const database = require('../functions/dataBase')
 
 
 module.exports = app => {
  
-    app.get('/intrusao', async (req, res) => {
+    app.get('/intrusion', async (req, res) => {
 
         res.statusCode = 200;
         res.setHeader('Content-Type', 'text/json');
@@ -32,7 +32,7 @@ module.exports = app => {
 
         try{
             if(email_vitima  !== null){
-                enviarEmailPadrao(env.emailDestinatario)(notas.textoEmailAlertaIntrusao(informacoesEmail))('Alerta de Segurança')
+                //enviarEmailPadrao(env.emailDestinatario)(notas.textoEmailAlertaIntrusao(informacoesEmail))('Alerta de Segurança')
                 saida.relatorio.notificacao_email.email = email_vitima
             }else{
                 saida.relatorio.notificacao_email.email = 'ninguém'
@@ -75,6 +75,11 @@ module.exports = app => {
             res.end(`${JSON.stringify(saida)}`)
             console.error(e)
         }
+        const saidaDb = new database.Saida(saida.relatorio);
+        saidaDb.save().then(
+            () => console.log("Relatório salvo."),
+            (err) => console.log(err)
+        )
         res.end(`${JSON.stringify(saida)}`) 
     });
     

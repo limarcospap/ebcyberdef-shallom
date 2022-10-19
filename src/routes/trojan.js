@@ -13,6 +13,7 @@ const f = require('../functions/basico')
 const path = require('path')
 const { rejects } = require('assert')
 const caminho = path.join(__dirname, '..', '..', 'database')
+const database = require('../functions/dataBase')
 
 
 
@@ -33,7 +34,7 @@ module.exports = app => {
         const informacoesEmail = `IP da máquina infectada: ${ip_vitima}, usuario: ${usuario_vitima}`
         try{
             if(email_vitima !== null){
-                enviarEmailPadrao(env.emailDestinatario)(notas.textoEmailAlertaTrojan(informacoesEmail))('Alerta de Segurança')
+                //enviarEmailPadrao(env.emailDestinatario)(notas.textoEmailAlertaTrojan(informacoesEmail))('Alerta de Segurança')
                 saida.relatorio.situacao = "neutralizado"
             }else{
                 saida.relatorio.situacao = "falha"
@@ -51,7 +52,11 @@ module.exports = app => {
             res.end(`${JSON.stringify(saida)}`)
             console.error(e)
         }
-        console.log(saida)
+        const saidaDb = new database.Saida(saida.relatorio);
+        saidaDb.save().then(
+            () => console.log("Relatório salvo."),
+            (err) => console.log(err)
+        )
         res.end(`${JSON.stringify(saida)}`)  
     });
 }

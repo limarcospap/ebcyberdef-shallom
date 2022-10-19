@@ -13,7 +13,7 @@ const f = require('../functions/basico')
 const path = require('path')
 const { rejects } = require('assert')
 const caminho = path.join(__dirname, '..', '..', 'database')
-
+const database = require('../functions/dataBase')
 
 
 module.exports = app => {
@@ -32,7 +32,7 @@ module.exports = app => {
         const email_vitima = emailValido(req.query.email_vitima)
         const informacoesEmail = `IP da máquina infectada: ${ip_vitima}, usuario: ${usuario_vitima}`
         try{
-            enviarEmailPadrao(env.emailDestinatario)(notas.textoEmailAlertaWorm(informacoesEmail))('Alerta de Segurança')
+            //enviarEmailPadrao(env.emailDestinatario)(notas.textoEmailAlertaWorm(informacoesEmail))('Alerta de Segurança')
             saida.relatorio.situacao = "neutralizado"
             saida.relatorio.maquinas.push(ip_vitima)
             saida.relatorio.notificacao_email.adm = usuario_vitima
@@ -47,7 +47,11 @@ module.exports = app => {
             res.end(`${JSON.stringify(saida)}`)
             console.error(e)
         }
-        console.log(saida)
+        const saidaDb = new database.Saida(saida.relatorio);
+        saidaDb.save().then(
+            () => console.log("Relatório salvo."),
+            (err) => console.log(err)
+        )
         res.end(`${JSON.stringify(saida)}`)  
     });
 }

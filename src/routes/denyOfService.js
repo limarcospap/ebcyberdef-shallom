@@ -12,7 +12,7 @@ const fs = require('fs');
 
 module.exports = app => {
  
-    app.get('/denyofservice', async (req, res) => {
+    app.get('/denialofservice', async (req, res) => {
 
       
 
@@ -29,7 +29,7 @@ module.exports = app => {
                 `IP do atacante: ${req.query.ip_atacante}, ASN${as_atacante}, Nome Adm AS: ${nome_adm_as}, email: ${email_adm_as} `
             
                 const texto = notas.textoEmail(nome_adm_as, req.query.ip_atacante, as_atacante)
-                email.enviarEmail(env.emailDestinatario, texto) // mudar env.emailDestinatario para email_adm_as
+                //email.enviarEmail(env.emailDestinatario, texto) // mudar env.emailDestinatario para email_adm_as
         
                 
 
